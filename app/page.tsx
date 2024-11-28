@@ -1,4 +1,5 @@
 import MenuEmptyState from './components/MenuEmptyState';
+import FormMenuPosition from './components/FormMenuPosition';
 
 export default function Home() {
   return (
@@ -6,6 +7,7 @@ export default function Home() {
       <div className="w-full max-w-[1168px] mx-auto">
         <main>
           <MenuEmptyState />
+          <FormMenuPosition/>
         </main>
       </div>
     </div>
