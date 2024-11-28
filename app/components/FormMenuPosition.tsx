@@ -8,7 +8,7 @@ interface FormInputs {
 }
 
 export default function FormMenuPosition() {
-  const { register, handleSubmit } = useForm<FormInputs>()
+  const { register, formState: { errors }, handleSubmit } = useForm<FormInputs>()
   const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data)
 
   return (
@@ -17,6 +17,7 @@ export default function FormMenuPosition() {
         <div className="mb-2 flex flex-col">
           <label className="font-medium text-sm text-[var(--greyDark) mb-[0.375rem]">Nazwa</label>
           <input {...register("name", { required: true })} type="text" className="shadow-[0_1px_2px_0px_rgba(16,24,40,0.05)] border border-[var(--greyLight)] rounded-lg py-2 px-3 text-[var(--greyLight2)] placeholder:text-[var(--greyLight2)]" placeholder="np. Promocje"/>
+          {errors.name?.type === 'required' && <p role="alert" className="text-xs text-red-400 mt-1">To pole nie może być puste.</p>}
         </div>
         <div className="mb-2 flex flex-col">
           <label className="font-medium text-sm text-[var(--greyDark) mb-[0.375rem]">Link</label>
