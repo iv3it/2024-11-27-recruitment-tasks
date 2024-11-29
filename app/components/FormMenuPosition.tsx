@@ -26,8 +26,9 @@ export default function FormMenuPosition() {
               <path d="M16.5 16.5L13.5834 13.5833M15.6667 8.58333C15.6667 12.4954 12.4954 15.6667 8.58333 15.6667C4.67132 15.6667 1.5 12.4954 1.5 8.58333C1.5 4.67132 4.67132 1.5 8.58333 1.5C12.4954 1.5 15.6667 4.67132 15.6667 8.58333Z" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
 
-            <input {...register("url")} type="text" className="w-full shadow-[0_1px_2px_0px_rgba(16,24,40,0.05)] border border-[var(--greyLight)] rounded-lg py-2 pl-[2.625rem] pr-[0.875rem] text-[var(--greyLight2)] placeholder:text-[var(--greyLight2)]" placeholder="Wklej lub wyszukaj"/>
+            <input {...register("url", {pattern: { value: /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:\d+)?(\/.*)?$/, message: "Wprowadź poprawny adres URL."}})} type="text" className="w-full shadow-[0_1px_2px_0px_rgba(16,24,40,0.05)] border border-[var(--greyLight)] rounded-lg py-2 pl-[2.625rem] pr-[0.875rem] text-[var(--greyLight2)] placeholder:text-[var(--greyLight2)]" placeholder="Wklej lub wyszukaj"/>
           </div>
+          {errors.url && <p role="alert" className="text-xs text-red-400 mt-1">{errors.url.message}</p>}
         </div>
 
         <div className="mt-5 flex gap-2">
