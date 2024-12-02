@@ -1,3 +1,8 @@
+## Menu builder in Next.js, Typescript & DND-KIT
+Live: (https://drpltask.netlify.app/)
+
+Features: add/edit/delete menu item, change menu items order on drag & drop.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
