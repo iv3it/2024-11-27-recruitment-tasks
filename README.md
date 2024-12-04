@@ -1,4 +1,4 @@
-## Menu builder in Next.js, Typescript & DND-KIT
+## Menu builder in Next.js, Typescript & DND-KIT, using Zustand for state management 
 Live: (https://drpltask.netlify.app/)
 
 Features: add/edit/delete menu item, change menu items order on drag & drop.
