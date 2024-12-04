@@ -95,7 +95,7 @@ export const useMenuItemsStore = create<MenuItemState>()(
             let [overItem, overParent] = getMenuItem(state.menuItems, overId);
 
             if(!activeItem) {
-              return state.menuItems
+              return { menuItems: state.menuItems }
             } 
 
             // prevent from dropping active inside itself
@@ -110,7 +110,7 @@ export const useMenuItemsStore = create<MenuItemState>()(
             }
 
             if(cancel) {
-              return state.menuItems
+              return { menuItems: state.menuItems }
             }
 
             let newMenuItems = [...state.menuItems];
