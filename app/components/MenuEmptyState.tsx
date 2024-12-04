@@ -2,14 +2,11 @@
 
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import FormMenuPosition from './FormMenuPosition';
-import { MenuItemType } from '@/types';
 import { useState } from 'react';
+import { useMenuItemsStore } from '../state/state';
 
-type MenuEmptyStateProps = {
-  onAddMenuItem: (item: MenuItemType) => void;
-};
-
-export default function MenuEmptyState({ onAddMenuItem } : MenuEmptyStateProps) {
+export default function MenuEmptyState() {
+  let onAddMenuItem = useMenuItemsStore((state) => state.onAddMenuItem);
   let [isOpen, setIsOpen] = useState(false);
 
   const handleCancel = () => {
@@ -31,7 +28,7 @@ export default function MenuEmptyState({ onAddMenuItem } : MenuEmptyStateProps) 
 
       {isOpen &&
         <div className='mt-8'>
-          <FormMenuPosition onSubmit={onAddMenuItem} onCancel={handleCancel}/>
+          <FormMenuPosition onSubmit={(newItem) => onAddMenuItem(newItem)} onCancel={handleCancel}/>
         </div>
       }
     </>

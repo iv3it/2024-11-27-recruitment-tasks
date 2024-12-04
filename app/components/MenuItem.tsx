@@ -5,23 +5,25 @@ import { MenuItemType } from '@/types';
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities'
 import { useState } from "react";
+import { useMenuItemsStore } from "../state/state";
 
 type MenuItemProps = {
   id: string;
   item: MenuItemType;
-  onDeleteMenuItem: (id: string) => void;
-  onEditMenuItem: (item: MenuItemType) => void;
-  onAddMenuItem: (item: MenuItemType, parentId?: string) => void;
   depth: number;
 };
 
-export default function MenuItem({ id, item, onDeleteMenuItem, onEditMenuItem, onAddMenuItem, depth } : MenuItemProps) {
+export default function MenuItem({ id, item, depth } : MenuItemProps) {
   let {attributes, listeners, setNodeRef, transform, transition} = useSortable({id});
   let styleDND = {
     transition,
     transform: CSS.Transform.toString(transform)
   }
 
+  let onAddMenuItem = useMenuItemsStore((state) => state.onAddMenuItem);
+  let onEditMenuItem = useMenuItemsStore((state) => state.onEditMenuItem);
+  let onDeleteMenuItem = useMenuItemsStore((state) => state.onDeleteMenuItem);
+  
   const [showChildForm, setShowChildForm] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentItem, setCurrentItem] = useState<MenuItemType | null>(null);
@@ -62,9 +64,6 @@ export default function MenuItem({ id, item, onDeleteMenuItem, onEditMenuItem, o
                 id={child.id}
                 key={child.id}
                 item={child}
-                onDeleteMenuItem={onDeleteMenuItem}
-                onEditMenuItem={onEditMenuItem}
-                onAddMenuItem={onAddMenuItem}
                 depth={depth + 1}
               />
             ))}

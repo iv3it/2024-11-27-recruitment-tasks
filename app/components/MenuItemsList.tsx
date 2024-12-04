@@ -1,49 +1,17 @@
 'use client'
 import { useState } from 'react';
+import { useMenuItemsStore } from '../state/state';
 import MenuItem from './MenuItem';
 import { MenuItemType } from '@/types';
 import FormMenuPosition from './FormMenuPosition';
 import { pointerWithin, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable'
 
-type MenuItemsListProps = {
-  menuItems: MenuItemType[];
-  onAddMenuItem: (item: MenuItemType,parentId?: string) => void;
-  onDeleteMenuItem: (id: string) => void;
-  onEditMenuItem: (item: MenuItemType) => void;
-  onDragAndDrop: (updater: (items: MenuItemType[]) => MenuItemType[]) => void;
-};
-
-export default function MenuItemsList({ menuItems, onAddMenuItem, onDeleteMenuItem, onEditMenuItem, onDragAndDrop } : MenuItemsListProps) {
-  const getMenuItem = (items: MenuItemType[], id: string, parent: MenuItemType | null = null): [MenuItemType | null, MenuItemType | null] => {
-    for (const item of items) {
-      if (item.id === id) {
-        return [item, parent];
-      }
-
-      if (item.children?.length) {
-        const [foundItem, foundParent] = getMenuItem(item.children, id, item);
-        if (foundItem) {
-          return [foundItem, foundParent];
-        }
-      }
-    }
-    
-    return [null, null]
-  };
-
-  let excludeItem = (items: MenuItemType[], id: string): MenuItemType[] => {
-    return items.filter((item) => {
-      if (item.id === id) {
-        return false;
-      }
-      if (item.children?.length) {
-        item.children = excludeItem(item.children, id);
-      }
-      return true;
-    });
-  };
-
+export default function MenuItemsList() {
+  let menuItems = useMenuItemsStore((state) => state.menuItems);
+  let onAddMenuItem = useMenuItemsStore((state) => state.onAddMenuItem);
+  let onDragAndDrop = useMenuItemsStore((state) => state.onDragAndDrop);
+  
   let handleDragEnd = (event : DragEndEvent) => {
     const {active, over} : any = event;
 
@@ -51,54 +19,7 @@ export default function MenuItemsList({ menuItems, onAddMenuItem, onDeleteMenuIt
 
     if(active.id === over.id) return;
 
-    onDragAndDrop((menuItems) => {
-      console.log(active.id);
-
-      let [activeItem, activeParent] = getMenuItem(menuItems, active.id);
-      let [overItem, overParent] = getMenuItem(menuItems, over.id);
-
-      if(!activeItem) {
-        return menuItems
-      } 
-
-      // prevent from dropping active inside itself
-      let cancel = false;
-      let tmpParent = overParent;
-      while(tmpParent != null) {
-        let [foundItem, foundParent] = getMenuItem(menuItems, tmpParent.id);
-        if (tmpParent.id == active.id) {
-          cancel = true
-        }
-        tmpParent = foundParent;
-      }
-
-      if(cancel) {
-        return menuItems
-      }
-
-      let newMenuItems = [...menuItems];
-
-      if (activeParent) {
-        activeParent.children = activeParent.children?.filter(
-          (child) => child.id !== active.id
-        );
-      } else {
-        newMenuItems = excludeItem(newMenuItems, active.id as string);
-      }
-
-      if (overParent) {
-        const parentChildren = overParent.children || [];
-        const overIndex = parentChildren.findIndex(
-          (child) => child.id === over.id
-        );
-        parentChildren.splice(overIndex, 0, activeItem);
-      } else {
-        const overIndex = newMenuItems.findIndex((item) => item.id === over.id);
-        newMenuItems.splice(overIndex, 0, activeItem);
-      }
-
-      return newMenuItems
-    })
+    onDragAndDrop(active.id, over.id);
   }
 
   let sensors = useSensors(
@@ -127,9 +48,6 @@ export default function MenuItemsList({ menuItems, onAddMenuItem, onDeleteMenuIt
                 item={item}
                 id={item.id}
                 key={index}
-                onAddMenuItem={onAddMenuItem}
-                onDeleteMenuItem={onDeleteMenuItem}
-                onEditMenuItem={onEditMenuItem}
                 depth={0}
               />
             )}
